@@ -1,0 +1,20 @@
+[submodule "simplex-catalog-servers-validator"]
+	path = simplex-catalog-servers-validator
+	url = https://github.com/ed-asriyan/simplex-catalog-servers-validator
+	branch = master
+[submodule "simplex-catalog-bots-validator"]
+	path = simplex-catalog-bots-validator
+	url = https://github.com/ed-asriyan/simplex-catalog-bots-validator
+	branch = master
+[submodule "simplex-catalog-relays-validator"]
+	path = simplex-catalog-relays-validator
+	url = https://github.com/ed-asriyan/simplex-catalog-relays-validator
+	branch = master
+[submodule "simplex-catalog-frontend"]
+	path = simplex-catalog-frontend
+	url = https://github.com/ed-asriyan/simplex-catalog-frontend
+	branch = master
+[submodule "simplex-catalog-supabase"]
+	path = simplex-catalog-supabase
+	url = https://github.com/ed-asriyan/simplex-catalog-supabase
+	branch = master
