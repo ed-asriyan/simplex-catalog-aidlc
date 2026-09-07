@@ -1,0 +1,29 @@
+{
+  "name": "Simplex Catalog",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "oven.bun-vscode",
+        "ms-azuretools.vscode-docker",
+        "rust-lang.rust-analyzer",
+        "svelte.svelte-vscode",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "rust-analyzer.cargo.allFeatures": true,
+        "rust-analyzer.checkOnSave.command": "clippy"
+      }
+    }
+  },
+  "postCreateCommand": "bun --version && docker --version",
+  "remoteUser": "vscode"
+}
