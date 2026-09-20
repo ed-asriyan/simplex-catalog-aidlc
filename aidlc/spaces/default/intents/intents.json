@@ -1,0 +1,12 @@
+[
+  {
+    "uuid": "01a0c015-6728-76a1-a1db-d4b1f0ecfeb8",
+    "slug": "quick-filter-presets",
+    "dirName": "260920-quick-filter-presets",
+    "scope": "quick-filter-presets",
+    "repos": [
+      "simplex-catalog-frontend"
+    ],
+    "status": "in-flight"
+  }
+]

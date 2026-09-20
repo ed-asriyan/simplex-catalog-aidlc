@@ -66,3 +66,6 @@
 
 <!-- Project-specific corrections from human feedback. -->
 <!-- Format: NEVER/ALWAYS [behavior] (learned [date]) -->
+- When a free-text answer to a structured question is already a complete, unambiguous substantive answer (not a request to discuss further), record it verbatim rather than re-prompting the user. (learned 2026-09-20) <!-- cid:260920-quick-filter-presets:intent-capture:d9ddd861a20bda0bed4495d91a50a356970674faa64dc18678053057156624fa -->
+- When a stage's default question topics reference an upstream artifact type that this scope skips, drop those topics from the questions file rather than asking about an artifact that doesn't exist. (learned 2026-09-20) <!-- cid:260920-quick-filter-presets:approval-handoff:745e2f7f09e03d02a54790d170ba5bd17f95a9c42d1603a6127b711316575867 -->
+- A `consumes` entry marked required with `consumes_absent` `expected: true` is absent by scope design, not a gap — proceed using only the artifacts that do exist rather than treating it as a missing dependency. (learned 2026-09-20) <!-- cid:260920-quick-filter-presets:approval-handoff:0d0d53bbb41f30686425c531e01637a8f8832a4358b4615a22729fcc0459e9bd -->

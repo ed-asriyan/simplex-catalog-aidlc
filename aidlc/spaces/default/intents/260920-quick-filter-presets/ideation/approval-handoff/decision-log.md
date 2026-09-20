@@ -1,0 +1,12 @@
+# Decision Log — Ideation Phase — Quick Filter Presets
+
+| # | Decision | Rationale | Source |
+|---|---|---|---|
+| 1 | Sized this as a custom-tailored 12-stage plan (`quick-filter-presets`), not a stock scope | Single-package, low-risk frontend feature; the mechanical stock grid over-selected stages driven by the frontend's lack of a test framework, which the composed plan addresses directly via Practices Discovery + CI Pipeline instead | Workflow composition, approved |
+| 2 | Business problem confirmed as repetitive manual filter re-entry when switching views | Directly stated in the initial request and confirmed in Intent Capture Q1 | `ideation/intent-capture/intent-capture-questions.md` |
+| 3 | Target customer confirmed as any visitor to the public servers catalog | Confirmed in Intent Capture Q2 | `ideation/intent-capture/intent-capture-questions.md` |
+| 4 | Success includes both the one-click UX and future usage analytics per filter/preset | Confirmed in Intent Capture Q3; exact analytics mechanism deferred to Requirements Analysis | `ideation/intent-capture/intent-capture-questions.md` |
+| 5 | Trigger is dogfooding — the requester's own need to switch between views (e.g. active clearnet, tor only, 90+ uptime, as non-exhaustive examples) plus a request to explore further useful presets and allow user-created custom filters | Confirmed in Intent Capture Q4 | `ideation/intent-capture/intent-capture-questions.md` |
+| 6 | Exact preset list, custom-filter limits/naming, and analytics mechanism accepted as open assumptions rather than resolved now | Requester chose "Accept assumptions" at the Assumption Confirmation step; these depend on exploring the servers catalog's actual filterable attributes, which belongs to Requirements Analysis | `ideation/intent-capture/intent-capture-questions.md` |
+| 7 | Advisory review of Intent Capture returned READY with 4 non-blocking findings (missing `## Assumptions & Open Questions` in stakeholder-map.md, non-numeric success metric, an unconfirmed technical detail, and unnamed assumption owners) | Human approved the stage as-is at the gate, accepting the findings as risk to carry forward rather than requesting a revision | `ideation/intent-capture/reviews/review-01.md`; `GATE_APPROVED` |
+| 8 | No critical risks, no resourcing/timeline blockers, and the requester is ready to proceed into Inception | Confirmed in Approval & Handoff Q1–Q4 | `ideation/approval-handoff/approval-handoff-questions.md` |
