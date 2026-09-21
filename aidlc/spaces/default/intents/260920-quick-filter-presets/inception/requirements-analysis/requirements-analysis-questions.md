@@ -19,7 +19,7 @@ Jira's Quick Filters toggle/combine; your description says a preset "immediately
 - C. Something else
 - X. Other (please specify)
 
-[Answer]:
+[Answer]: A. Clicking a preset REPLACES the entire current filter. Presets are mutually exclusive: applying one clears the others and any manual filter, giving exactly that preset's view in one click.
 
 ## Q2. Which hardcoded presets should ship? (select all that apply)
 
@@ -32,7 +32,13 @@ Based on the filter fields that actually exist, here's a proposed starter set. P
 - E. **Has info page** — infoPageAvailable = yes
 - X. Other (please specify / rename / add presets, e.g. "Online clearnet", specific countries)
 
-[Answer]:
+[Answer]: The shipped preset set is five, named as follows:
+1. **All Online** — status = up (all reachable servers, tor + clearnet).
+2. **Online Clearnet** — status = up AND network = clearnet.
+3. **Online Tor** — status = up AND network = tor.
+4. **Recently Added** — the most recently added servers first (sort by `createdAt` descending); see requirements for whether a recency window filter is also applied.
+5. **High Uptime** — uptime90 ≥ 90%.
+The earlier SMP/XFTP and "Has info page" suggestions are NOT shipped as presets. "network = tor/clearnet" is a new derived concept — see Q3.
 
 ## Q3. How should the "clearnet" (non-tor) case be handled, given the filter can't currently express "host does NOT contain .onion"?
 
@@ -43,7 +49,7 @@ Your dogfooding examples included "all active clearnet."
 - C. Approximate clearnet another way — I'll explain
 - X. Other (please specify)
 
-[Answer]:
+[Answer]: C — derive tor vs clearnet from the server's location under the hood, computed CLIENT-SIDE. `status`, `protocol`, and `country` are already filtered in JS after the join (servers-service.ts:183–197), so a new derived `network: 'tor' | 'clearnet'` filter needs NO backend/query change. Under the hood: a server whose location (country) is empty is treated as tor; a server with a known location is clearnet — tor `.onion` addresses are not geolocatable and so carry no country, whereas clearnet servers do. IMPLEMENTATION NOTE / ASSUMPTION: the host `.onion` suffix is the more authoritative signal for "is a tor address"; a clearnet server not yet successfully geolocated also has an empty country and would misclassify as tor under a pure location test. Requirements record location-presence as the chosen primary signal per this decision, with host-`.onion` noted as the authoritative cross-check to reconcile at design time.
 
 ## Q4. Custom filters — what does "create/save a custom filter" capture, and how is it created?
 
@@ -52,7 +58,7 @@ Your dogfooding examples included "all active clearnet."
 - C. Something else
 - X. Other (please specify)
 
-[Answer]:
+[Answer]: A. The user configures the normal filter controls, clicks "Save current filter", gives it a name, and it appears as a reusable custom quick-filter button alongside the hardcoded presets.
 
 ## Q5. Custom filter management — which operations, and any limits?
 
@@ -61,7 +67,7 @@ Your dogfooding examples included "all active clearnet."
 - C. Create and delete only (no in-place edit — to change one, delete and re-create)
 - X. Other (please specify)
 
-[Answer]:
+[Answer]: A. Full CRUD — create, rename, edit-in-place (re-save over an existing one), and delete — with no hard limit on how many custom filters a user can save.
 
 ## Q6. Persistence scope — you confirmed custom filters live in localStorage. Anything about that to pin down?
 
@@ -69,7 +75,7 @@ Your dogfooding examples included "all active clearnet."
 - B. localStorage now, but design it so a future server-side sync could be added without breaking saved filters
 - X. Other (please specify)
 
-[Answer]:
+[Answer]: A. Plain localStorage only — per-browser, not synced across devices or shared. That is the expected and accepted behaviour; no server-side sync is planned for this intent.
 
 ## Q7. Do the ad-hoc (unsaved) filters and the presets/custom filters need to stay shareable via URL, as the current filter is?
 
@@ -79,7 +85,7 @@ Today the active filter is encoded in the URL so a filtered view can be linked/b
 - B. No — presets/custom filters are a local convenience only; the URL doesn't need to reflect them
 - X. Other (please specify)
 
-[Answer]:
+[Answer]: A. Yes — applying any preset, custom filter, or ad-hoc unsaved filter updates the URL query params exactly as the current filter does today, so every resulting view stays linkable and bookmarkable.
 
 ## Q8. Analytics — you want to measure which filters/presets get used most after release. How should that be captured?
 
@@ -90,4 +96,10 @@ The frontend already ships Sentry (`@sentry/svelte`) and references a `VITE_ANAL
 - C. Defer analytics wiring to a later intent — just make sure preset applies are structured so an event can be added later without rework
 - X. Other (please specify)
 
-[Answer]:
+[Answer]: A. Emit a lightweight analytics event on every preset / custom-filter apply via the existing Google-Analytics-style measurement id (`VITE_ANALYTICS_MEASHUREMENT_ID`), carrying which preset or custom filter was applied so post-release usage ("which filters are used most") can be measured.
+
+## Consolidated Summary Confirmation
+
+The eight answers above resolve to this design: preset click REPLACES the whole filter (presets mutually exclusive); five shipped presets — All Online, Online Clearnet, Online Tor, Recently Added, High Uptime; tor/clearnet derived client-side from location presence (no backend change), with host-`.onion` noted as the authoritative cross-check; custom filters created by "save current filter" + name; full CRUD with no count limit; plain per-browser localStorage (no sync); all views URL-synced and linkable; and a GA-style analytics event emitted on every apply.
+
+[Answer]: Looks correct
