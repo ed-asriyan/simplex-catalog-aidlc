@@ -180,8 +180,8 @@ enter-filters-every-time workflow.
   and `YGGDRASIL` is included as the third overlay marker present in the code.
   Flag if clearnet should instead exclude only `TOR`/`I2P`.
 - **AOQ-5** "High Uptime" is specified as `uptime90 ≥ 90` (filter) AND sort by
-  `uptime90` desc. If the intent was sort-only (highest-uptime-first with no
-  threshold), drop the `≥ 90` filter. To confirm.
+  `uptime90` desc. CONFIRMED by the human (2026-09-21): the `≥ 90` filter is
+  kept (not sort-only).
 
 ## Traceability
 
