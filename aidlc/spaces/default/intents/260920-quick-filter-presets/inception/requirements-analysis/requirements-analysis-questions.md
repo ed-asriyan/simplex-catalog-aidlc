@@ -32,13 +32,13 @@ Based on the filter fields that actually exist, here's a proposed starter set. P
 - E. **Has info page** — infoPageAvailable = yes
 - X. Other (please specify / rename / add presets, e.g. "Online clearnet", specific countries)
 
-[Answer]: The shipped preset set is five, named as follows:
-1. **All Online** — status = up (all reachable servers, tor + clearnet).
-2. **Online Clearnet** — status = up AND network = clearnet.
-3. **Online Tor** — status = up AND network = tor.
-4. **Recently Added** — the most recently added servers first (sort by `createdAt` descending); see requirements for whether a recency window filter is also applied.
-5. **High Uptime** — uptime90 ≥ 90%.
-The earlier SMP/XFTP and "Has info page" suggestions are NOT shipped as presets. "network = tor/clearnet" is a new derived concept — see Q3.
+[Answer]: The shipped preset set is five. Each preset is a full VIEW = filter + sort, and every preset filters to online servers (status = true):
+1. **All Online** — status = online; sort by last_check desc.
+2. **Online Clearnet** — status = online AND location is clearnet (location not TOR/I2P/YGGDRASIL); sort by last_check desc.
+3. **Online Tor** — status = online AND location = TOR; sort by last_check desc.
+4. **Recently Added** — status = online; sort by created_at desc (no recency-window filter — it is a sort).
+5. **High Uptime** — status = online AND uptime90 ≥ 90; sort by uptime90 desc.
+The earlier SMP/XFTP and "Has info page" suggestions are NOT shipped as presets. Sorting is explicitly part of each preset (refinement). The tor/clearnet distinction uses the location field directly — see Q3.
 
 ## Q3. How should the "clearnet" (non-tor) case be handled, given the filter can't currently express "host does NOT contain .onion"?
 
@@ -49,7 +49,10 @@ Your dogfooding examples included "all active clearnet."
 - C. Approximate clearnet another way — I'll explain
 - X. Other (please specify)
 
-[Answer]: C — derive tor vs clearnet from the server's location under the hood, computed CLIENT-SIDE. `status`, `protocol`, and `country` are already filtered in JS after the join (servers-service.ts:183–197), so a new derived `network: 'tor' | 'clearnet'` filter needs NO backend/query change. Under the hood: a server whose location (country) is empty is treated as tor; a server with a known location is clearnet — tor `.onion` addresses are not geolocatable and so carry no country, whereas clearnet servers do. IMPLEMENTATION NOTE / ASSUMPTION: the host `.onion` suffix is the more authoritative signal for "is a tor address"; a clearnet server not yet successfully geolocated also has an empty country and would misclassify as tor under a pure location test. Requirements record location-presence as the chosen primary signal per this decision, with host-`.onion` noted as the authoritative cross-check to reconcile at design time.
+[Answer]: Use the location field directly — this is more precise and technically correct, and needs no new "network" term. The location (`country`) field already carries overlay-network marker strings — `TOR`, `I2P`, `YGGDRASIL` (see utils.ts getFlagEmoji) — instead of a geographic code for servers reachable only over those networks. So:
+- **clearnet** = location is a real country code, i.e. location is NOT TOR/I2P/YGGDRASIL.
+- **tor** = location = TOR.
+Both are expressible TODAY with the existing inclusive/exclusive `countries` filter (Online Clearnet = countries exclusive of [TOR, I2P, YGGDRASIL]; Online Tor = countries inclusive [TOR]). No new filter field, no `.onion` heuristic, no backend change. Because the location marker is authoritative, there is no misclassification of un-geolocated servers. This removes the earlier proposed derived `network` requirement (FR-8 withdrawn).
 
 ## Q4. Custom filters — what does "create/save a custom filter" capture, and how is it created?
 
@@ -85,7 +88,7 @@ Today the active filter is encoded in the URL so a filtered view can be linked/b
 - B. No — presets/custom filters are a local convenience only; the URL doesn't need to reflect them
 - X. Other (please specify)
 
-[Answer]: A. Yes — applying any preset, custom filter, or ad-hoc unsaved filter updates the URL query params exactly as the current filter does today, so every resulting view stays linkable and bookmarkable.
+[Answer]: A. Yes — applying any preset, custom filter, or ad-hoc unsaved filter updates the URL exactly as the current view does today, so every resulting view stays linkable and bookmarkable. REFINEMENT: the URL encodes ONLY the resulting view — the filter query params plus the existing sortField/sortOrder params (sort is already URL-synced). The preset/custom-filter name or id is NEVER written to the URL; a button is just a shortcut that sets the underlying filter+sort, and does not change how state integrates with the URL.
 
 ## Q8. Analytics — you want to measure which filters/presets get used most after release. How should that be captured?
 
@@ -100,6 +103,6 @@ The frontend already ships Sentry (`@sentry/svelte`) and references a `VITE_ANAL
 
 ## Consolidated Summary Confirmation
 
-The eight answers above resolve to this design: preset click REPLACES the whole filter (presets mutually exclusive); five shipped presets — All Online, Online Clearnet, Online Tor, Recently Added, High Uptime; tor/clearnet derived client-side from location presence (no backend change), with host-`.onion` noted as the authoritative cross-check; custom filters created by "save current filter" + name; full CRUD with no count limit; plain per-browser localStorage (no sync); all views URL-synced and linkable; and a GA-style analytics event emitted on every apply.
+The eight answers above resolve to this design: preset click REPLACES the whole VIEW — filter AND sort (presets mutually exclusive). Five shipped presets, each a filter+sort, all filtered to status=online: All Online (sort last_check), Online Clearnet (location not TOR/I2P/YGGDRASIL; sort last_check), Online Tor (location=TOR; sort last_check), Recently Added (sort created_at), High Uptime (uptime90≥90; sort uptime90). Tor/clearnet comes straight from the location field's overlay markers via the existing inclusive/exclusive `countries` filter — no `network` term (FR-8 withdrawn), no `.onion` heuristic, no backend change. Custom filters: "save current filter" + name, capturing filter+sort; full CRUD, no count limit; plain per-browser localStorage. URL encodes the resulting VIEW ONLY (filter params + existing sortField/sortOrder) — never a preset/custom name; a button is just a shortcut. GA-style analytics event on every apply. Two flagged confirmations: AOQ-4 (clearnet excludes YGGDRASIL too) and AOQ-5 (High Uptime keeps the ≥90 filter, not sort-only).
 
-[Answer]: Looks correct
+[Answer]:
