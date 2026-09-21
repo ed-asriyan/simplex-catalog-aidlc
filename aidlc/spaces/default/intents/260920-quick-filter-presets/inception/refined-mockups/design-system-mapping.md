@@ -19,8 +19,9 @@ None.
 
 | Mockup element | UIkit classes / attributes | Notes |
 |---|---|---|
-| Quick-filter bar container | `uk-flex uk-flex-wrap uk-flex-middle` with inline `gap: 8px`, `uk-margin-small-bottom`; `role="group" aria-label="Quick filters"` | Mirrors the existing toolbar row's flex-wrap+gap pattern in table/index.svelte |
-| Section within existing filter card | (unchanged) `uk-card uk-card-default uk-card-body uk-card-small` | Bar sits ABOVE this card, not inside |
+| Quick-filter bar — outer box | Its OWN `uk-card uk-card-default uk-card-body uk-card-small uk-margin-bottom` sibling container, a distinct box like the header and the filter card (never nested inside either) | Keeps sections visually + structurally separate so a future editor can't merge them |
+| Quick-filter bar — inner row | inside that card: `uk-flex uk-flex-wrap uk-flex-middle` with inline `gap: 8px`; `role="group" aria-label="Quick filters"` | Mirrors the existing toolbar row's flex-wrap+gap pattern in table/index.svelte |
+| Existing filter card | (unchanged) `uk-card uk-card-default uk-card-body uk-card-small` | Bar sits ABOVE this card, as a separate sibling — not inside |
 | Preset chip (inactive) | `uk-button uk-button-default uk-button-small` + `aria-pressed="false"` | Matches existing small buttons |
 | Preset / custom chip (active) | `uk-button uk-button-primary uk-button-small` + `aria-pressed="true"` | Selected-state treatment (Q5=A) |
 | Custom chip body | `uk-button uk-button-default uk-button-small` (or primary when active) | Click = apply |

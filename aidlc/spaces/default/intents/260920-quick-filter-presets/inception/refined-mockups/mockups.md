@@ -23,16 +23,19 @@ implementation; clearnet overlay set → AOQ-4, settled.)
 
 ## Layout overview
 
-The quick-filter bar is inserted ABOVE the existing filter card (Q1=A). Nothing
-below it changes structurally; applying a chip drives the existing filter card
-and sort state.
+The quick-filter bar is inserted as its OWN distinct box ABOVE the existing
+filter card (Q1=A). Every logical section is drawn as a separate bordered box so
+the boundaries are unambiguous and a future editor cannot accidentally merge two
+sections. Nothing below the bar changes structurally; applying a chip drives the
+existing filter card and sort state.
 
 ```
-Servers Catalog  🌐
-Discover and share community-run SMP and XFTP servers...
-[ Add server anonymously ]
-
-┌─ Quick filters ────────────────────────────────────────────────────────────┐
+┌─ Header / intro ─────────────────────────────────────────────────────────────┐
+│  🌐 Servers Catalog                                                            │
+│  Discover and share community-run SMP and XFTP servers...                      │
+│  [ Add server anonymously ]                                                    │
+└──────────────────────────────────────────────────────────────────────────────┘
+┌─ Quick filters (NEW) ────────────────────────────────────────────────────────┐
 │  [All Online] [Online Clearnet] [Online Tor] [Recently Added] [High Uptime]  │  ← presets (US1.1)
 │  · [My clearnet 90+ ⋯] [Tor watchlist ⋯]              [ + Save current ]      │  ← custom chips (US2.1) + save
 └──────────────────────────────────────────────────────────────────────────────┘
@@ -40,12 +43,21 @@ Discover and share community-run SMP and XFTP servers...
 │ URI[____] Identity[____] Type[▾] Status[▾] Info[▾] Location[▾] Labels[▾]      │
 │ Min uptime 7d[__] 30d[__] 90d[__]                                             │
 └──────────────────────────────────────────────────────────────────────────────┘
-[🔄] [Import labels] [Export labels]                 [Page size ▾] [Bulk mode]
+┌─ Toolbar ────────────────────────────────────────────────────────────────────┐
+│ [🔄] [Import labels] [Export labels]              [Page size ▾] [Bulk mode]   │
+└──────────────────────────────────────────────────────────────────────────────┘
 ┌─ Table ───────────────────────────────────────────────────────────────────────┐
 │ ▢ Status  Host  Identity  Country  Type  Uptime7/30/90  Info  Added  …         │
 │ … rows …                                                                       │
 └──────────────────────────────────────────────────────────────────────────────┘
 ```
+
+Each box above is a separate container in the DOM: the Header/intro keeps its
+existing `uk-section` wrapper, the Quick filters bar is a NEW sibling container
+(its own `uk-card`/section), and the Filters card, Toolbar, and Table are the
+existing containers unchanged. The Quick-filters box must be a distinct sibling —
+never rendered inside the Header or the Filters card — so the sections stay
+visually and structurally separated.
 
 ## M1 — Quick-filter bar, default load  (US1.1, US5.1, AC5.1.6)
 

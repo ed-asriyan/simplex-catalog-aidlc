@@ -75,6 +75,10 @@ default-load, tie-precedence), `interaction-spec.md` (component specs + a single
 exclusive [TOR,I2P,YGGDRASIL], tor = inclusive [TOR], uptime90 = 0.9 fraction),
 and `accessibility-checklist.md` (AA + NFR4). Advisory product-lead review: READY;
 its 1 Major (atomic apply → applyView helper) and 4 Minor findings were all
-applied; requirements AOQ-5 wording closed. No backend change.
+applied; requirements AOQ-5 wording closed. No backend change. Revision: the
+layout now draws EVERY section (Header/intro, Quick filters, Filters card,
+Toolbar, Table) as a separate bordered box, and the Quick-filters bar is its own
+distinct `uk-card` sibling container (never nested in the header or filter card),
+so future edits can't accidentally merge sections.
 
 [Answer]:
