@@ -87,7 +87,14 @@ It already exists as a script but nothing runs it automatically today.
 
 The requester said "Close, but adjust" to a restated summary of the Q7 policy (feature branches per intent across every affected repo including this umbrella one, AI never merges to master or deploys to production, AI deploys the full system locally at the end of each intent, human merges to master manually). What specifically should change?
 
-[Answer]:
+[Answer]: At the end of each intent, the AI should commit and push its work to the feature branch(es) (in every affected repo, including this umbrella repo) alongside — not instead of — deploying the complete system locally to verify it. Both are required finishing steps: commit+push the feature branch(es), and run a full local deployment to verify. The AI still never merges to master and never deploys to production; the human still does the final manual merge.
+
+## Consolidated Summary Confirmation
+
+- Looks correct
+- Request changes
+
+[Answer]: Looks correct
 
 ## Q8. Should the project adopt a linter/formatter (e.g. ESLint + Prettier) now, given it has none today?
 

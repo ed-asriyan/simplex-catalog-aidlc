@@ -2,13 +2,14 @@
 > This file is kept up to date automatically while the stage runs. Add observations at the review step, not by editing here directly.
 
 ## Interpretations
-<!-- example: 2026-05-29T10:14:32Z — chose REST over GraphQL; the consuming team only needs CRUD, revisit if subscriptions land -->
+- 2026-09-20T20:56:58Z — The human's Q7 deployment answer was really a full multirepo branching/merge/finishing policy, not just a deployment toggle; treated it as authoritative and routed it into both Way of Working and discovered-rules Mandated/Forbidden rather than only the Deployment section, since it governs how every future intent's work moves through the repos.
 
 ## Deviations
-<!-- example: 2026-05-29T10:14:32Z — skipped the optional caching layer the stage prose suggested; the dataset is small enough that it adds risk -->
+- 2026-09-20T20:56:58Z — The human chose "always build a walking skeleton first" (Q2=B) even for small features, which is stricter than the composer's own rationale for this feature (it had judged a skeleton unnecessary for a low-risk UI change). Recorded the human's standing preference as the team practice; it will apply to future intents regardless of the composer's per-feature sizing.
 
 ## Tradeoffs
-<!-- example: 2026-05-29T10:14:32Z — picked TDD over BDD this run; the team is unit-first and the domain is well-understood -->
+- 2026-09-20T20:56:58Z — Picked TDD (test-first) over the org default of test-after per the human's explicit Q4 choice, despite the codebase having zero existing test infrastructure; accepted the higher upfront discipline cost because the human affirmed it as the standing methodology.
 
 ## Open questions
-<!-- example: 2026-05-29T10:14:32Z — confirm the retention window with compliance before the next stage hardens the schema -->
+- 2026-09-20T20:56:58Z — GitHub-level Dependabot security alerts and secret scanning are repo/org settings not visible from the checked-out files; whether they are enabled remains unconfirmed and should be verified in GitHub settings by the human at some point.
+- 2026-09-20T20:56:58Z — No npm-audit/SAST CI gate was adopted this run; the devsecops review flagged it as a pre-existing gap to consider later, not blocking this feature.
