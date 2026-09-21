@@ -75,10 +75,14 @@ enter-filters-every-time workflow.
   `countries` `FilterArray` for the tor/clearnet distinction via the location
   markers. No new filter field, no derived "network" concept, and no
   server-side query or database schema change is required.
-- **FR-5** The currently active preset (if any) SHALL be visually indicated as
-  selected. Selection is DERIVED by matching the active view (filter + sort)
-  against each preset definition — it is not stored. When the active view
-  matches no preset (e.g. the user edited it), no preset is shown as selected.
+- **FR-5** The currently active preset OR custom filter (if any) SHALL be
+  visually indicated as selected. Selection is DERIVED by matching the active
+  view (filter + sort) against each preset and each saved custom-filter
+  definition — it is not stored. When the active view matches no preset and no
+  custom filter (e.g. the user edited it), nothing is shown as selected.
+  - **FR-5.1** At most one button is shown selected at a time. When the active
+    view matches both a preset and a custom filter, the PRESET indication takes
+    precedence (presets are the canonical, hardcoded views).
 
 ### Custom filters
 
@@ -91,7 +95,8 @@ enter-filters-every-time workflow.
 - **FR-7** A user SHALL be able to manage custom filters with full CRUD, with no
   hard limit on how many are saved:
   - **FR-7.1** Create (per FR-6).
-  - **FR-7.2** Rename an existing custom filter.
+  - **FR-7.2** Rename an existing custom filter. (Whether duplicate names are
+    blocked is deferred — see AOQ-3.)
   - **FR-7.3** Edit in place — re-save the current view over an existing custom
     filter, updating its stored definition.
   - **FR-7.4** Delete a custom filter.
@@ -133,7 +138,10 @@ enter-filters-every-time workflow.
   post-release usage can be measured. (Traces: Q8=A, and the intent's metrics
   goal.) When the measurement id is not configured, emission SHALL be a safe
   no-op (no error surfaced to the user). Note: this analytics identifier is an
-  in-event property only and is NOT written to the URL (see FR-10).
+  in-event property only and is NOT written to the URL (see FR-10). For a custom
+  filter, the event SHALL carry a STABLE internal id (assigned at creation), not
+  the user's editable free-text name, so rename does not fragment usage metrics;
+  it MAY additionally carry the display name as a separate property.
 
 ## Non-Functional Requirements
 
@@ -186,5 +194,6 @@ enter-filters-every-time workflow.
 | FR-8 | Withdrawn (superseded by FR-3/FR-4) |
 | FR-9 | Intent ("persist … in localStorage"); Q6 |
 | FR-10 | Existing URL-encoded filter+sort behaviour; Q7; refinement (URL = view only) |
+| FR-11 | Existing default-view behaviour (`list.svelte` `defaultFilter`); additive-scope constraint |
 | FR-12 | Intent (measure usage); Q8 |
 | NFR-1..NFR-5 | Team practices (layering, TDD/coverage, no-backend-change scope) |
