@@ -48,75 +48,75 @@ enter-filters-every-time workflow.
 
 ### Presets
 
-- **FR-1** The servers page SHALL display a row of quick-filter preset buttons.
+- **FR1** The servers page SHALL display a row of quick-filter preset buttons.
   Clicking a preset applies its predefined view immediately, without any further
   confirmation. (Traces: intent — "click one to instantly apply a predefined
   filter".)
-- **FR-2** Applying a preset SHALL REPLACE the entire active view — both the
+- **FR2** Applying a preset SHALL REPLACE the entire active view — both the
   filter and the sort (any preset, custom, or ad-hoc view currently in effect is
   discarded and replaced). Presets are mutually exclusive: at most one preset is
   the active view at a time. (Traces: Q1=A.)
-- **FR-3** Each preset defines a **filter and a sort**. All five presets filter
+- **FR3** Each preset defines a **filter and a sort**. All five presets filter
   to online servers (`status = true`); they differ by an additional filter
   facet and/or their sort. The following five presets SHALL ship, hardcoded:
 
   | Preset | Filter | Sort |
   |---|---|---|
-  | **FR-3.1 All Online** | `status = true` | `last_check` desc |
-  | **FR-3.2 Online Clearnet** | `status = true` AND location is clearnet (`countries` = `{ inclusive: false, values: ['TOR','I2P','YGGDRASIL'] }`) | `last_check` desc |
-  | **FR-3.3 Online Tor** | `status = true` AND location = `TOR` (`countries` = `{ inclusive: true, values: ['TOR'] }`) | `last_check` desc |
-  | **FR-3.4 Recently Added** | `status = true` | `created_at` desc |
-  | **FR-3.5 High Uptime** | `status = true` AND `uptime90 ≥ 90` | `uptime90` desc |
+  | **FR3.1 All Online** | `status = true` | `last_check` desc |
+  | **FR3.2 Online Clearnet** | `status = true` AND location is clearnet (`countries` = `{ inclusive: false, values: ['TOR','I2P','YGGDRASIL'] }`) | `last_check` desc |
+  | **FR3.3 Online Tor** | `status = true` AND location = `TOR` (`countries` = `{ inclusive: true, values: ['TOR'] }`) | `last_check` desc |
+  | **FR3.4 Recently Added** | `status = true` | `created_at` desc |
+  | **FR3.5 High Uptime** | `status = true` AND `uptime90 ≥ 90` | `uptime90` desc |
 
   (Traces: Q2 and the follow-up refinement making sort an explicit part of every
   preset and status=online the common base.)
-- **FR-4** Every preset SHALL be expressible entirely with the existing
+- **FR4** Every preset SHALL be expressible entirely with the existing
   `Filter` and `Sort` model — including the existing inclusive/exclusive
   `countries` `FilterArray` for the tor/clearnet distinction via the location
   markers. No new filter field, no derived "network" concept, and no
   server-side query or database schema change is required.
-- **FR-5** The currently active preset OR custom filter (if any) SHALL be
+- **FR5** The currently active preset OR custom filter (if any) SHALL be
   visually indicated as selected. Selection is DERIVED by matching the active
   view (filter + sort) against each preset and each saved custom-filter
   definition — it is not stored. When the active view matches no preset and no
   custom filter (e.g. the user edited it), nothing is shown as selected.
-  - **FR-5.1** At most one button is shown selected at a time. When the active
+  - **FR5.1** At most one button is shown selected at a time. When the active
     view matches both a preset and a custom filter, the PRESET indication takes
     precedence (presets are the canonical, hardcoded views).
 
 ### Custom filters
 
-- **FR-6** A user SHALL be able to save the current view as a named custom
+- **FR6** A user SHALL be able to save the current view as a named custom
   filter: they configure the normal filter/sort controls, choose "save current
   filter", and provide a name; the saved view then appears as a button alongside
   the presets. A saved custom filter SHALL capture both the filter and the sort,
   consistent with presets. (Traces: Q4=A; refinement that sort is part of a
   view.)
-- **FR-7** A user SHALL be able to manage custom filters with full CRUD, with no
+- **FR7** A user SHALL be able to manage custom filters with full CRUD, with no
   hard limit on how many are saved:
-  - **FR-7.1** Create (per FR-6).
-  - **FR-7.2** Rename an existing custom filter. (Whether duplicate names are
+  - **FR7.1** Create (per FR6).
+  - **FR7.2** Rename an existing custom filter. (Whether duplicate names are
     blocked is deferred — see AOQ-3.)
-  - **FR-7.3** Edit in place — re-save the current view over an existing custom
+  - **FR7.3** Edit in place — re-save the current view over an existing custom
     filter, updating its stored definition.
-  - **FR-7.4** Delete a custom filter.
+  - **FR7.4** Delete a custom filter.
   (Traces: Q5=A.)
-- **FR-7.5** Clicking a custom filter SHALL apply it with the same
-  replace-the-whole-view semantics as a preset (FR-2).
+- **FR7.5** Clicking a custom filter SHALL apply it with the same
+  replace-the-whole-view semantics as a preset (FR2).
 
-- **FR-8** *(Withdrawn.)* An earlier draft proposed a derived `network`
+- **FR8** *(Withdrawn.)* An earlier draft proposed a derived `network`
   classification. Removed: the tor/clearnet distinction is expressed directly
-  from the location field via the existing `countries` filter (FR-3, FR-4), so
+  from the location field via the existing `countries` filter (FR3, FR4), so
   no `network` term is defined. ID retained as withdrawn to keep later IDs
   stable.
 
 ### Persistence & URL
 
-- **FR-9** Custom filters SHALL be persisted in `localStorage`, per-browser,
+- **FR9** Custom filters SHALL be persisted in `localStorage`, per-browser,
   not synced across devices or shared. (Traces: Q6=A.) The stored payload MUST
   be independent of the existing `serversFilter` "last used" key so saved
   filters and the last-used view do not clobber each other.
-- **FR-10** Applying any preset, custom filter, or ad-hoc filter SHALL update
+- **FR10** Applying any preset, custom filter, or ad-hoc filter SHALL update
   the page URL to reflect the resulting **view only** — the filter query params
   and the `sortField`/`sortOrder` params — exactly as manual filter/sort changes
   do today. The URL SHALL NOT carry any preset id/name or custom-filter
@@ -124,43 +124,43 @@ enter-filters-every-time workflow.
   and does not change how state integrates with the URL. Opening such a URL
   SHALL restore that view, keeping every view linkable and bookmarkable.
   (Traces: Q7=A; refinement on URL semantics.)
-- **FR-11** The existing default view (`status = true`, sort `last_check`/`desc`)
+- **FR11** The existing default view (`status = true`, sort `last_check`/`desc`)
   SHALL be preserved when no view is supplied by URL, and the feature SHALL be
   purely additive to the current filter/sort mechanics — no existing capability
   is removed.
 
 ### Analytics
 
-- **FR-12** On every preset apply and every custom-filter apply, the system
+- **FR12** On every preset apply and every custom-filter apply, the system
   SHALL emit a lightweight analytics event via the existing
   Google-Analytics-style measurement id (`VITE_ANALYTICS_MEASHUREMENT_ID`),
   carrying an identifier of which preset or custom filter was applied, so
   post-release usage can be measured. (Traces: Q8=A, and the intent's metrics
   goal.) When the measurement id is not configured, emission SHALL be a safe
   no-op (no error surfaced to the user). Note: this analytics identifier is an
-  in-event property only and is NOT written to the URL (see FR-10). For a custom
+  in-event property only and is NOT written to the URL (see FR10). For a custom
   filter, the event SHALL carry a STABLE internal id (assigned at creation), not
   the user's editable free-text name, so rename does not fragment usage metrics;
   it MAY additionally carry the display name as a separate property.
 
 ## Non-Functional Requirements
 
-- **NFR-1 (Layering)** Filter-preset and custom-filter logic (definitions,
+- **NFR1 (Layering)** Filter-preset and custom-filter logic (definitions,
   persistence, apply/serialize, active-preset matching) SHALL live in the store
   layer under `src/store/servers/`, not in component-local logic; presentation
   lives under `src/components/servers/`. Database `snake_case` field names MUST
   NOT leak past the service boundary. (Traces: team Code Style practices.)
-- **NFR-2 (Testing)** All new/changed logic SHALL be developed test-first (TDD)
+- **NFR2 (Testing)** All new/changed logic SHALL be developed test-first (TDD)
   with Vitest; UI with `@testing-library/svelte`. New/changed code SHALL meet
   the 80% line-coverage floor. CI MUST fail the PR if tests or `svelte-check` do
   not pass.
-- **NFR-3 (No backend change)** The feature SHALL NOT require any Supabase
+- **NFR3 (No backend change)** The feature SHALL NOT require any Supabase
   schema, view, or query change; all preset/custom-filter behaviour is achieved
   with the existing data, filter/sort model, and client-side derivation.
-- **NFR-4 (Accessibility)** Preset and custom-filter controls SHALL be
+- **NFR4 (Accessibility)** Preset and custom-filter controls SHALL be
   keyboard-operable and expose their selected/active state to assistive
   technology (consistent with existing UIkit usage).
-- **NFR-5 (Graceful storage failure)** If `localStorage` is unavailable or
+- **NFR5 (Graceful storage failure)** If `localStorage` is unavailable or
   malformed, the page SHALL still render and function with presets only;
   custom-filter reads/writes MUST fail safe without breaking the servers list.
 
@@ -187,13 +187,13 @@ enter-filters-every-time workflow.
 
 | Requirement | Origin |
 |---|---|
-| FR-1, FR-2, FR-5 | Intent ("instantly apply a predefined filter"); Q1; refinement |
-| FR-3 | Q2 + refinement (per-preset filter & sort, status=online base) |
-| FR-4 | Existing `Filter`/`Sort`/`countries` model; refinement (location field) |
-| FR-6, FR-7 | Intent ("create, save, edit, and persist custom filters"); Q4, Q5 |
-| FR-8 | Withdrawn (superseded by FR-3/FR-4) |
-| FR-9 | Intent ("persist … in localStorage"); Q6 |
-| FR-10 | Existing URL-encoded filter+sort behaviour; Q7; refinement (URL = view only) |
-| FR-11 | Existing default-view behaviour (`list.svelte` `defaultFilter`); additive-scope constraint |
-| FR-12 | Intent (measure usage); Q8 |
-| NFR-1..NFR-5 | Team practices (layering, TDD/coverage, no-backend-change scope) |
+| FR1, FR2, FR5 | Intent ("instantly apply a predefined filter"); Q1; refinement |
+| FR3 | Q2 + refinement (per-preset filter & sort, status=online base) |
+| FR4 | Existing `Filter`/`Sort`/`countries` model; refinement (location field) |
+| FR6, FR7 | Intent ("create, save, edit, and persist custom filters"); Q4, Q5 |
+| FR8 | Withdrawn (superseded by FR3/FR4) |
+| FR9 | Intent ("persist … in localStorage"); Q6 |
+| FR10 | Existing URL-encoded filter+sort behaviour; Q7; refinement (URL = view only) |
+| FR11 | Existing default-view behaviour (`list.svelte` `defaultFilter`); additive-scope constraint |
+| FR12 | Intent (measure usage); Q8 |
+| NFR1..NFR5 | Team practices (layering, TDD/coverage, no-backend-change scope) |
