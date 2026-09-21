@@ -50,6 +50,15 @@ implies, so that I can trust one click to give the right servers.
 - **AC1.2.5** — Given I click **High Uptime**, Then results are online servers with 90-day uptime ≥ 90% (90.0 included at the boundary), sorted by 90-day uptime, highest first. (Threshold confirmed per requirements AOQ-5.)
 - **AC1.2.6** — Given any preset is applied, Then it is expressed using the existing filter and sort model only (no backend/query change is required for it to work).
 
+### US1.3 — Change a filter or sort field after applying a preset  · Must Have
+As a catalog visitor, I want to tweak a filter or sort field after I have applied
+a preset, so that I can start from a preset and adjust it to exactly what I want.
+
+- **AC1.3.1** — Given a preset is the active view, When I change any filter or sort field via the normal controls, Then the change is applied on top of the preset's view, producing an ad-hoc view (the preset's view combined with my change).
+- **AC1.3.2** — Given I have modified the view after applying a preset, Then selection is re-derived from the resulting view (per AC5.1.3): if the view no longer matches any preset or custom filter, nothing is shown selected; if it happens to exactly match a preset's or custom filter's definition — including the original preset (e.g. I reverted my edit) — that one is shown selected (preset precedence per AC5.1.4).
+- **AC1.3.3** — Given I have modified the view after applying a preset, Then the hardcoded preset definition itself is unchanged, and re-clicking that preset restores its exact original view (discarding my ad-hoc change).
+- **AC1.3.4** — Given I have modified the view after applying a preset, Then the URL updates to encode the resulting ad-hoc view (filter + sort), keeping it linkable (per US3.2).
+
 ---
 
 ## Group 2 — Custom-filter lifecycle  (FR6, FR7)
@@ -95,6 +104,17 @@ filter, so that I can update it without deleting and recreating it.
 
 - **AC2.5.1** — Given a saved custom filter and a different current view, When I re-save over that custom filter, Then its stored definition is replaced by the current view and its name and stable id are kept.
 - **AC2.5.2** — Given I edited a custom filter in place, When I later click it, Then it applies the updated view.
+
+### US2.6 — Change a filter or sort field after applying a custom filter  · Must Have
+As a catalog visitor, I want to tweak a filter or sort field after applying one of
+my custom filters, so that I can adjust a saved view on the fly without
+accidentally overwriting the saved one.
+
+- **AC2.6.1** — Given a custom filter is the active view, When I change any filter or sort field via the normal controls, Then the change is applied, producing an ad-hoc view that no longer equals the saved custom filter.
+- **AC2.6.2** — Given I have modified the view after applying a custom filter, Then that custom filter is no longer shown as selected, because the active view no longer matches its saved definition (per AC5.1.3) — unless the modified view happens to exactly match a preset or another custom filter, in which case that one is shown selected (preset precedence per AC5.1.4).
+- **AC2.6.3** — Given I have modified the view after applying a custom filter, Then the saved custom-filter definition is NOT automatically changed; the change stays ad-hoc until I explicitly re-save over it (edit-in-place, US2.5) or save it as a new custom filter (US2.1).
+- **AC2.6.4** — Given I have modified the view after applying a custom filter and have not saved, When I re-click that custom filter, Then its saved view is re-applied and my unsaved ad-hoc changes are discarded.
+- **AC2.6.5** — Given I have modified the view after applying a custom filter, Then the URL updates to encode the resulting ad-hoc view (filter + sort), keeping it linkable (per US3.2).
 
 ---
 
@@ -171,8 +191,13 @@ selected, so that I know which view I am looking at.
 
 ## Dependencies
 
-- US2.2/US2.3/US2.4/US2.5 depend on US2.1 (a custom filter must exist first; the
-  stable id from AC2.1.4 underpins US2.4/US2.5 and AC4.1.2).
+- US2.2/US2.3/US2.4/US2.5/US2.6 depend on US2.1 (a custom filter must exist first;
+  the stable id from AC2.1.4 underpins US2.4/US2.5 and AC4.1.2).
+- US1.3 (modify after preset) and US2.6 (modify after custom filter) depend on the
+  ad-hoc/replace semantics of US1.1/US2.2 and the deselect rule of US5.1
+  (AC5.1.3); US2.6's persist path is US2.5 (edit-in-place) or US2.1 (save-as-new).
 - US5.1 depends on US1.1 (presets) and US2.2 (custom apply) for the match set.
-- US3.1 underpins US2.1 persistence; US3.2 applies to every apply (US1.1, US2.2).
-- US4.1 hooks the apply action of US1.1 and US2.2.
+- US3.1 underpins US2.1 persistence; US3.2 applies to every apply and every ad-hoc
+  change (US1.1, US2.2, US1.3, US2.6).
+- US4.1 hooks the apply action of US1.1 and US2.2 (an ad-hoc change per US1.3/US2.6
+  is not a preset/custom apply, so it emits no apply event — AC4.1.5).

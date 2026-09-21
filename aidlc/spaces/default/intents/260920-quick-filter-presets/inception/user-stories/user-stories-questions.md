@@ -65,16 +65,22 @@ follow-up questions required.
 ## Consolidated Summary Confirmation
 
 The user-stories artifacts resolve to: **1 persona** (Catalog Visitor, spanning
-casual → power/dogfooding use); **13 stories in 5 workflow groups** — Presets
-(US1.1–US1.2), Custom-filter lifecycle (US2.1–US2.5), Persistence & URL
-(US3.1–US3.3), Analytics (US4.1), Selected-state feedback (US5.1); **47
+casual → power/dogfooding use); **14 stories in 5 workflow groups** — Presets
+(US1.1–US1.3), Custom-filter lifecycle (US2.1–US2.6), Persistence & URL
+(US3.1–US3.3), Analytics (US4.1), Selected-state feedback (US5.1); **61
 acceptance criteria** in Given/When/Then form. MoSCoW: core = Must Have,
 analytics + rename + edit-in-place = Should Have (nothing dropped). Every FR/NFR
 is traced in `traceability.json` (deterministic sensor passed; FR8 withdrawn,
-NFR1/NFR2 process-N/A, NFR3 via AC1.2.6). The mob (design, developer, quality)
-and the advisory product-lead review contributed gaps that were folded in:
-storage fail-safe, empty-name validation, empty-result handling, negative
-analytics path, save discoverability, stable custom-filter id, delete
-confirmation, single coherent filter+sort apply, and split accessibility ACs.
+NFR1/NFR2 process-N/A, NFR3 via AC1.2.6). Following review feedback, two explicit
+"modify a facet after applying a view" stories were added — **US1.3** (change a
+field after a preset) and **US2.6** (change a field after a custom filter): in
+both, the change produces an ad-hoc view and the preset/custom deselects; for a
+custom filter the saved definition is NOT auto-modified (persist only via
+edit-in-place US2.5 or save-as-new US2.1), and re-clicking restores the saved
+view. The mob (design, developer, quality) and the advisory product-lead review
+contributed gaps that were folded in: storage fail-safe, empty-name validation,
+empty-result handling, negative analytics path, save discoverability, stable
+custom-filter id, delete confirmation, single coherent filter+sort apply, and
+split accessibility ACs.
 
 [Answer]:
